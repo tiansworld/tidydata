@@ -12,8 +12,10 @@ train_df <- read.table(train_dir_loc,header=FALSE,colClasses="numeric")
 test_df <- read.table(test_dir_loc,header=FALSE,colClasses="numeric")
 
 #Read the descriptive variable names
-col_labels <- readLines(paste0(dir_loc,"/features.txt",sep=""))
-
+#col_labels <- readLines(paste0(dir_loc,"/features.txt",sep=""))
+collabels <- read.table(paste0(dir_loc,"/features.txt",sep=""),stringsAsFactors=F,sep=" ",header=F)
+col_labels <- paste0(collabels[,1],"_",collabels[,2],sep="")
+col_labels <- tolower(sapply(col_labels,function(x) gsub(" +|_|-|\\.|\\(|\\)",x, replacement="")))
 ## read training active labels
 train_label <- readLines(paste0(dir_loc,"/train/y_train.txt",sep="")) 
 ## read test active labels
@@ -31,8 +33,11 @@ test_df <- cbind(type=rep("test",length(test_subject)),test_subject,test_label,t
 colnames(test_df) <- c("type","subject_id","active_id",col_labels)
 
 ## Merge two together and add the descriptive variable names to each column
-full_data <- merge(test_df,train_df,all.x=T,all.y=T)
+full_data <- rbind(test_df,train_df)
 full_data <- tbl_df(full_data)
 
 ## Select only the mearsurements on the mean and standard deviation. That is the conlumns variable names contain "mean" and "std"
 tidy_data <- select(full_data,type,subject_id,active_id,contains("mean()"),contains("std()"))
+
+## Group by subject label and active label
+grp <- group_by(tidy_data,subject_id,active_id)
