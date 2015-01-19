@@ -49,4 +49,4 @@ grp <- group_by(tidy_data,subject_id,active_id)
 average <- summarise_each(grp,funs(mean),4:89)
 
 ## Write the summarise data to file
-write.table(summarise_each(grp,funs(mean),4:89),file="tidy_data.txt",row.names=F)
+write.table(average,file="tidy_data.txt",row.names=F)
