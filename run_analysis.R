@@ -1,5 +1,5 @@
 ## Import necessary libraries -- dplyr, tidlyr
-library(dplyr,tidyr)
+library(plyr,dplyr,tidyr)
 
 ## Read training data set
 # get current work directory, so I can know where to find the dataset
@@ -37,7 +37,16 @@ full_data <- rbind(test_df,train_df)
 full_data <- tbl_df(full_data)
 
 ## Select only the mearsurements on the mean and standard deviation. That is the conlumns variable names contain "mean" and "std"
-tidy_data <- select(full_data,type,subject_id,active_id,contains("mean()"),contains("std()"))
+tidy_data <- select(full_data,type,subject_id,active_id,contains("mean"),contains("std"))
 
+## Name the actives with a meaningful name for active_id column, the meaningful name is from original data file activity_labels.txt
+activity_names <- readLines(paste0(dir_loc,"activity_labels.txt",sep=""))
+tidy_data$active_id <- mapvalues(tidy_data$active_id, c(1:6), activity_names)
 ## Group by subject label and active label
 grp <- group_by(tidy_data,subject_id,active_id)
+
+## Summarise each variable(exclude activity, subject and type) for each activity and each subject
+average <- summarise_each(grp,funs(mean),4:89)
+
+## Write the summarise data to file
+write.table(summarise_each(grp,funs(mean),4:89),file="tidy_data.txt",row.names=F)
