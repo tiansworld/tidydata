@@ -27,9 +27,9 @@ train_subject <- readLines(paste0(dir_loc,"/train/subject_train.txt",sep=""))
 test_subject <- readLines(paste0(dir_loc,"/test/subject_test.txt",sep="")) 
 
 #Add label columns to the data sets
-train_df <- cbind(type=rep("train",length(train_subject)),train_subject,train_label,train_df)
+train_df <- cbind(type=rep("train",length(train_subject)),as.numeric(train_subject),train_label,train_df)
 colnames(train_df) <- c("type","subject_id","active_id",col_labels)
-test_df <- cbind(type=rep("test",length(test_subject)),test_subject,test_label,test_df)
+test_df <- cbind(type=rep("test",length(test_subject)),as.numeric(test_subject),test_label,test_df)
 colnames(test_df) <- c("type","subject_id","active_id",col_labels)
 
 ## Merge two together and add the descriptive variable names to each column
