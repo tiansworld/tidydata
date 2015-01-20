@@ -1,5 +1,7 @@
-## Import necessary libraries -- dplyr, tidlyr
-library(plyr,dplyr,tidyr)
+## Import necessary libraries -- plyr, dplyr and  tidyr
+library(plyr)
+library(dplyr)
+library(tidyr)
 
 ## Read training data set
 # get current work directory, so I can know where to find the dataset
@@ -28,22 +30,22 @@ test_subject <- readLines(paste0(dir_loc,"/test/subject_test.txt",sep=""))
 
 #Add label columns to the data sets
 train_df <- cbind(type=rep("train",length(train_subject)),as.numeric(train_subject),train_label,train_df)
-colnames(train_df) <- c("type","subject_id","active_id",col_labels)
+colnames(train_df) <- c("type","subject_id","activity_id",col_labels)
 test_df <- cbind(type=rep("test",length(test_subject)),as.numeric(test_subject),test_label,test_df)
-colnames(test_df) <- c("type","subject_id","active_id",col_labels)
+colnames(test_df) <- c("type","subject_id","activity_id",col_labels)
 
 ## Merge two together and add the descriptive variable names to each column
 full_data <- rbind(test_df,train_df)
 full_data <- tbl_df(full_data)
 
 ## Select only the mearsurements on the mean and standard deviation. That is the conlumns variable names contain "mean" and "std"
-tidy_data <- select(full_data,type,subject_id,active_id,contains("mean"),contains("std"))
+tidy_data <- select(full_data,type,subject_id,activity_id,contains("mean"),contains("std"))
 
-## Name the actives with a meaningful name for active_id column, the meaningful name is from original data file activity_labels.txt
+## Name the actives with a meaningful name for activity_id column, the meaningful name is from original data file activity_labels.txt
 activity_names <- readLines(paste0(dir_loc,"activity_labels.txt",sep=""))
-tidy_data$active_id <- mapvalues(tidy_data$active_id, c(1:6), activity_names)
+tidy_data$activity_id <- mapvalues(tidy_data$activity_id, c(1:6), activity_names)
 ## Group by subject label and active label
-grp <- group_by(tidy_data,subject_id,active_id)
+grp <- group_by(tidy_data,subject_id,activity_id)
 
 ## Summarise each variable(exclude activity, subject and type) for each activity and each subject
 average <- summarise_each(grp,funs(mean),4:89)
