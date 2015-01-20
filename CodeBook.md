@@ -9,10 +9,14 @@ This file simply decribes variables which are used in run_analysis.R script for 
 * <pre>col_labels</pre> Vector, each measurement names with special character removed, and names are changed from upper case to lower case.
 * <pre>train_label</pre><pre>test_label</pre> Vector, stores training and test activity labels.
 * <pre>train_subject</pre><pre>test_subject</pre> Vector, stores subject id
-* <pre>train_df</pre>,<pre>test_df</pre> Data frame, stores train and test data set, including:
+* <pre>train_df</pre><pre>test_df</pre> Data frame, stores train and test data set, including:
+
 ** <pre>type</pre> Stores the type of data set --  train or test.
+
 ** <pre>subject_id</pre> Column of subject id
+
 ** <pre>activity_id<pre> Column of activity labels
+
 * <pre>full_data</pre> tbl data frame, includes both train and test data.
 * <pre>tidy_data</pre> tbl data frame, includes only the mean and standard deviation columns.
 * <pre>activity_names</pre> Vector, stores activity names.
